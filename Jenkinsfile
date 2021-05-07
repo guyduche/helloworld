@@ -12,7 +12,7 @@ pipeline {
             agent any
             steps {
                 script {
-                  sh 'docker build --no-cache -t $IMAGE_REPO/$IMAGE_NAME:$IMAGE_TAG .'
+                  sh 'docker build -t $IMAGE_REPO/$IMAGE_NAME:$IMAGE_TAG .'
                 }
             }
         }
@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                   sh '''
-                    curl http://172.17.0.1 | grep -q "Hello universe"
+                    curl http://172.17.0.1 | grep -q "Hello universe! Aurelien"
                   '''
                 }
             }

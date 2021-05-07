@@ -3,6 +3,8 @@ pipeline {
        IMAGE_NAME = "helloworld"
        IMAGE_TAG = "latest"
        IMAGE_REPO = "guyduche"
+	   STAGING = "aurelien-staging"
+       PRODUCTION = "aurelien-production"
     }
     agent none
     stages {
@@ -72,5 +74,63 @@ pipeline {
                 }
             }
         }
-	}
+        stage('Push image in staging and deploy it') {
+            when {
+              expression { GIT_BRANCH == 'origin/master' }
+            }
+            agent any
+            environment {
+                HEROKU_API_KEY = credentials('heroku_api_key')
+            }
+            steps {
+                script {
+                    sh '''
+                      heroku container:login
+                      heroku create $STAGING || echo "project already exist"
+                      heroku container:push -a $STAGING web
+                      heroku container:release -a $STAGING web
+                    '''
+                }
+            }
+        }
+		stage('Test staging deployment') {
+		    agent any
+		    steps {
+			    script {
+			       sh '''
+				      curl https://${STAGING}.herokuapp.com | grep -q "Hello universe"
+				   '''
+			    }
+		    }
+		}
+		stage('Push image in production and deploy it') {
+		    when {
+				expression { GIT_BRANCH == 'origin/master' }
+				}
+		    agent any
+		    environment {
+			    HEROKU_API_KEY = credentials('heroku_api_key')
+		    }  
+		    steps {
+			    script {
+				    sh '''
+				      heroku container:login
+				      heroku create $PRODUCTION || echo "project already exist"
+				      heroku container:push -a $PRODUCTION web
+				      heroku container:release -a $PRODUCTION web
+				    '''
+			    }
+			}
+		}
+		stage('Test production deployment') {
+		    agent any
+		    steps {
+			    script {
+			       sh '''
+				     curl https://${PRODUCTION}.herokuapp.com | grep -q "Hello universe"
+				   '''
+			    }
+		    }
+		}
+    }
 }

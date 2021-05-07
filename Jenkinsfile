@@ -7,7 +7,7 @@ pipeline {
     agent none
     stages {
 		stage('Clone repo') {
-            agent { docker { image 'dirane/docker-ansible:latest' } }
+            agent any
             steps {
                 script {
                   sh '''
@@ -18,7 +18,7 @@ pipeline {
             }
         }
         stage('Build image') {
-            agent { docker { image 'dirane/docker-ansible:latest' } }
+            agent any
             steps {
                 script {
                   sh 'docker build -t $IMAGE_REPO/$IMAGE_NAME:$IMAGE_TAG .'
@@ -26,7 +26,7 @@ pipeline {
             }
         }
         stage('Run container based on builded image') {
-            agent { docker { image 'dirane/docker-ansible:latest' } }
+            agent any
             steps {
                 script {
                   sh '''
@@ -37,7 +37,7 @@ pipeline {
             }
         }
         stage('Test image') {
-            agent { docker { image 'dirane/docker-ansible:latest' } }
+            agent any
             steps {
                 script {
                   sh '''
@@ -47,7 +47,7 @@ pipeline {
             }
         }
         stage('Clean Container') {
-            agent { docker { image 'dirane/docker-ansible:latest' } }
+            agent any
             steps {
                script {
                  sh '''
@@ -57,7 +57,7 @@ pipeline {
             }
         }
         stage('Push image on dockerhub') {
-            agent { docker { image 'dirane/docker-ansible:latest' } }
+            agent any
             environment {
                 DOCKERHUB_LOGIN = credentials('dockerhub_id')
 				DOCKERHUB_PASS = credentials('dockerhub_pass')

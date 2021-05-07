@@ -8,6 +8,7 @@
     - name: Create default containers
       docker_container:
         name: "helloworld"
-        image: "guyduche/helloworld"
+        image: "guyduche/helloworld:latest"
         ports: 80:80
+        pull: yes
 ...

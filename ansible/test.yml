@@ -1,0 +1,14 @@
+---
+- name: "Availability test"
+  become: yes
+  hosts: clients
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
+  tasks:
+    - name: "test"
+      uri:
+        url: "http://{{ ansible_host }}"
+        return_content: yes
+      register: this
+      failed_when: "'Hello universe' not in this.content"
+...

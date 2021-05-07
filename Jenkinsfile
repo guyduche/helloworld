@@ -8,7 +8,7 @@ pipeline {
     }
     agent none
     stages {
-        stage('Build image') {
+	    stage('Build image') {
             agent any
             steps {
                 script {
@@ -61,6 +61,13 @@ pipeline {
                       docker push ${IMAGE_REPO}/${IMAGE_NAME}:${IMAGE_TAG}
                    '''
                 }
+            }
+        }
+		stage('Check yaml syntax') {
+            agent { docker { image 'sdesbure/yamllint' } }
+            steps {
+                sh 'yamllint --version'
+                sh 'yamllint \${WORKSPACE}'
             }
         }
 	    stage('Deploy using ansible') {

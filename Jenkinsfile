@@ -12,7 +12,7 @@ pipeline {
             agent any
             steps {
                 script {
-                  sh 'docker build -t $IMAGE_REPO/$IMAGE_NAME:$IMAGE_TAG .'
+                  sh 'docker build --no-cache -t $IMAGE_REPO/$IMAGE_NAME:$IMAGE_TAG .'
                 }
             }
         }

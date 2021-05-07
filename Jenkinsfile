@@ -11,8 +11,8 @@ pipeline {
             steps {
                 script {
                   sh '''
-				    git clone https://github.com/guyduche/helloworld.git
-					cd helloworld
+				    git clone https://github.com/guyduche/helloworld.git || echo "already cloned"
+					cd helloworld || echo "already in helloworld"
 				  '''
                 }
             }

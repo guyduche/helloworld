@@ -1,6 +1,6 @@
 ---
 - name: "Availability test"
-  become: yes
+  become: true
   hosts: clients
   vars:
     ansible_python_interpreter: /usr/bin/python3
@@ -8,7 +8,6 @@
     - name: "test"
       uri:
         url: "http://{{ ansible_host }}"
-        return_content: yes
+        return_content: true
       register: this
       failed_when: "'Hello universe! Aurelien' not in this.content"
-...
